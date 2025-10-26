@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kevin_hub - IA Sem Filtros</title>
+</head>
+<body>
+    <h1>Kevin_hub - IA Sem Filtros</h1>
+    
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <div id="responseContainer"></div>
+    
+    <script>
+        // Defina sua chave de API da OpenAI
+        const apiKey = "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";
+        
+        // Função para enviar uma mensagem
+        async function sendMessage(message) {
+            // Crie um objeto de solicitação
+            const request = {
+                prompt: message,
+                max_tokens: 100,
+            };
+            
+            // Envie a solicitação para a API da OpenAI
+            const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify(request),
+            });
+            
+            // Retorne a resposta gerada pelo chatbot
+            return await response.json();
+        }
+        
+        // Função para exibir a resposta na página
+        function displayResponse(response) {
+            const responseContainer = document.getElementById("responseContainer");
+            responseContainer.innerHTML = `<p>${response.choices[0].text.strip()}</p>`;
+        }
+        
+        // Evento de envio do formulário
+        document.getElementById("messageForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            
+            const message = document.getElementById("messageInput").value;
+            const response = await sendMessage(message);
+            displayResponse(response);
+        });
+    </script>
+</body>
+</html>
